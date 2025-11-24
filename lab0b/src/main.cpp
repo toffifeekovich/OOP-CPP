@@ -13,10 +13,17 @@ int main(int argc, char* argv[]) {
     std::string inputFile(argv[1]);
     std::string outputFile(argv[2]);
 
-    Reader A(inputFile);
-    Sorter B(A.getText());
-    csvOutputer C(outputFile);
-    C.write(B.getWordCount(), B.getSortedDict());
+    try {
+        Reader readObject(inputFile);
+        Sorter sortObject(readObject.getText());
+        csvOutputer outputObject(outputFile);
+
+        outputObject.write(sortObject.getWordCount(), sortObject.getSortedDict());
+    }
+    catch (const std::exception& e) {
+        std::cerr << "Error: " << e.what() << "\n";
+        return 1; 
+    }
 
     return 0;
 }

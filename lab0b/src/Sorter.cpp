@@ -5,6 +5,7 @@ Sorter::Sorter(const std::list<std::string>& text) {
     for (const std::string &str : text) {
         dict[str] += 1;
     }
+    
     for (const auto& [key, value] : dict) {
         sortedDict.insert({value, key});
     }
