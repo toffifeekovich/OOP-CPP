@@ -17,4 +17,4 @@ final_word???end END end End eNd
 Repetition repetition REPETITION rePeTiTiOn
 Zebra zebra ZEBRA
 Alpha beta gamma delta
-beta Beta BETA
+beta Beta BETA beta

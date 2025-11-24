@@ -2,6 +2,8 @@
 #include <iostream>
 #include <fstream>
 #include <cctype>
+#include <stdexcept>
+
 
 Reader::Reader(const std::string &fileName) : fileName(fileName) {
     std::ifstream file(this->fileName);
@@ -15,18 +17,28 @@ Reader::Reader(const std::string &fileName) : fileName(fileName) {
                 if (isalnum(ch)) {
                     word += ch;
                 } else if (!word.empty()) {
-                    text.push_back(word);
+                    dict[word] += 1;
+                    wordCount += 1;
                     word.clear();
                 }
             }
             if (!word.empty()) {
-                text.push_back(word);
+                dict[word] += 1;
+                wordCount += 1;
                 word.clear();
             }
         }
     }
 }
 
-const std::list<std::string>& Reader::getText() {
-    return text;
+std::map<std::string, int>& Reader::getDict() {
+    return dict;
 }
+
+const int& Reader::getWordCount() const {
+    return wordCount;
+}
+void Reader::clearDict() {
+    dict.clear();
+}
+

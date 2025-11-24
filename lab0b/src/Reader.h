@@ -3,14 +3,19 @@
 
 #include <string>
 #include <list>
+#include <map>
 
 class Reader {
+    std::map<std::string, int> dict;
     std::string fileName;
-    std::list<std::string> text;
+    int wordCount = 0;
 
 public:
     explicit Reader(const std::string &fileName);
-    const std::list<std::string>& getText();
+    std::map<std::string, int>& getDict();
+    const int& getWordCount() const;
+    void clearDict();
+
 };
 
 #endif // READER_H

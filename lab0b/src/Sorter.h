@@ -2,21 +2,23 @@
 #define SORTER_H
 
 #include <string>
-#include <list>
 #include <map>
-#include <functional>
+#include <vector>
+#include <algorithm>
+#include <stdexcept>
+using Item = std::pair<std::string, int>;
 
 class Sorter {
-    std::map<std::string, int> dict;
-    int wordCount = 0;
-    std::multimap<int, std::string, std::greater<int>> sortedDict;
+    std::vector<Item> pairs;
+    
+    static bool descending(const Item& a, const Item& b);
+
+    static bool ascending(const Item& a, const Item& b);
 
 public:
-    explicit Sorter(const std::list<std::string>& text);
-
-    const std::map<std::string, int>& getDict() const;
-    const int& getWordCount() const;
-    const std::multimap<int, std::string, std::greater<int>>& getSortedDict() const;
+    explicit Sorter(const std::map<std::string, int>&refDict);
+    void sort(const std::string& comp);
+    const std::vector<Item>& getPairs() const;
 };
 
 #endif // SORTER_H
