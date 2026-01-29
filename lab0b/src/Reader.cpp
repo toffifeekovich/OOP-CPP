@@ -41,4 +41,3 @@ const int& Reader::getWordCount() const {
 void Reader::clearDict() {
     dict.clear();
 }
-
