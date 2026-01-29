@@ -6,7 +6,7 @@
 
 
 Reader::Reader(const std::string &fileName) : fileName(fileName) {
-    std::ifstream file(this->fileName);
+    std::ifstream file(fileName);
 
     if (!file.is_open()) {
         throw std::runtime_error("Error opening file: " + fileName);

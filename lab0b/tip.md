@@ -1,3 +1,14 @@
+## Сборка и запуск
+
+```
+cd /d/source-code/OOP-CPP/lab0b
+rm -rf build
+mkdir build
+cmake -S . -B build -G "MinGW Makefiles"
+cmake --build build
+build/lab0b.exe data/inputExample.txt data/outputExample.csv
+```
+
 Здесь список подсказок
 
 Ошибки которые надо исправить:

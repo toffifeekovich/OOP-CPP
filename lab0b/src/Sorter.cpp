@@ -11,8 +11,7 @@ if (a.second != b.second)
 return a.first < b.first; 
 }
 
-bool Sorter::ascending(const Item& a,
-const Item& b) {
+bool Sorter::ascending(const Item& a, const Item& b) {
 if (a.second != b.second)
     return a.second < b.second;
 return a.first < b.first;
