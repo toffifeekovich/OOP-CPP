@@ -4,50 +4,26 @@
 #include <stdexcept>
 #include <utility> // std::move, std::swap
 
-// --- Конструкторы / деструктор ---
+PriorityQueue::PriorityQueue(): data_(), max_heap_(true) {}
 
-PriorityQueue::PriorityQueue()
-    : data_()
-    , max_heap_(true)
-{
-}
+PriorityQueue::PriorityQueue(bool max_heap): data_(), max_heap_(max_heap) {}
 
-PriorityQueue::PriorityQueue(bool max_heap)
-    : data_()
-    , max_heap_(max_heap)
-{
-}
-
-PriorityQueue::PriorityQueue(const std::vector<value_type>& data, bool max_heap)
-    : data_(data)
-    , max_heap_(max_heap)
-{
-    // Построение кучи из произвольного вектора (heapify)
+PriorityQueue::PriorityQueue(const std::vector<value_type>& data, bool max_heap): data_(data), max_heap_(max_heap){
     if (!data_.empty()) {
-        // Идём с последнего внутреннего узла к корню
-        for (size_type i = data_.size() / 2; i-- > 0; ) {
-            sift_down(i);
+        size_type last_parent = data_.size() / 2 - 1; 
+        for (size_type i = last_parent + 1; i > 0; i--) {
+            sift_down(i - 1);
         }
     }
 }
 
 PriorityQueue::~PriorityQueue() = default;
 
-PriorityQueue::PriorityQueue(const PriorityQueue& other)
-    : data_(other.data_)
-    , max_heap_(other.max_heap_)
-{
-}
+PriorityQueue::PriorityQueue(const PriorityQueue& other): data_(other.data_), max_heap_(other.max_heap_) {}
 
-PriorityQueue::PriorityQueue(PriorityQueue&& other) noexcept
-    : data_(std::move(other.data_))
-    , max_heap_(other.max_heap_)
-{
-    // other остаётся в валидном, но не определённом с точки зрения содержимого состоянии
-}
+PriorityQueue::PriorityQueue(PriorityQueue&& other) noexcept: data_(std::move(other.data_)), max_heap_(other.max_heap_){}
 
-PriorityQueue& PriorityQueue::operator=(const PriorityQueue& other)
-{
+PriorityQueue& PriorityQueue::operator=(const PriorityQueue& other){
     if (this != &other) {
         data_     = other.data_;
         max_heap_ = other.max_heap_;
@@ -55,8 +31,7 @@ PriorityQueue& PriorityQueue::operator=(const PriorityQueue& other)
     return *this;
 }
 
-PriorityQueue& PriorityQueue::operator=(PriorityQueue&& other) noexcept
-{
+PriorityQueue& PriorityQueue::operator=(PriorityQueue&& other) noexcept{
     if (this != &other) {
         data_     = std::move(other.data_);
         max_heap_ = other.max_heap_;
@@ -64,16 +39,12 @@ PriorityQueue& PriorityQueue::operator=(PriorityQueue&& other) noexcept
     return *this;
 }
 
-// --- Основные методы ---
-
-void PriorityQueue::push(value_type x)
-{
+void PriorityQueue::push(value_type x){
     data_.push_back(x);
     sift_up(data_.size() - 1);
 }
 
-void PriorityQueue::pop()
-{
+void PriorityQueue::pop(){
     if (data_.empty()) {
         throw std::out_of_range("PriorityQueue::pop on empty queue");
     }
@@ -83,7 +54,6 @@ void PriorityQueue::pop()
         return;
     }
 
-    // Помещаем последний элемент в корень и восстанавливаем кучу
     std::swap(data_.front(), data_.back());
     data_.pop_back();
     sift_down(0);
@@ -122,8 +92,6 @@ bool PriorityQueue::is_max_heap() const noexcept
     return max_heap_;
 }
 
-// --- Операторы сравнения ---
-
 bool PriorityQueue::operator==(const PriorityQueue& rhs) const noexcept
 {
     return max_heap_ == rhs.max_heap_ && data_ == rhs.data_;
@@ -134,12 +102,8 @@ bool PriorityQueue::operator!=(const PriorityQueue& rhs) const noexcept
     return !(*this == rhs);
 }
 
-// --- Вспомогательные методы ---
-
 bool PriorityQueue::compare(value_type a, value_type b) const noexcept
 {
-    // Для max-heap "лучше" тот, у кого значение больше,
-    // для min-heap — наоборот
     return max_heap_ ? (a > b) : (a < b);
 }
 
@@ -148,7 +112,6 @@ void PriorityQueue::sift_up(size_type idx)
     while (idx > 0) {
         size_type p = parent(idx);
         if (!compare(data_[idx], data_[p])) {
-            // Инвариант кучи не нарушен
             break;
         }
         std::swap(data_[idx], data_[p]);
@@ -173,7 +136,6 @@ void PriorityQueue::sift_down(size_type idx)
         }
 
         if (best == idx) {
-            // Уже куча
             break;
         }
 
@@ -181,8 +143,6 @@ void PriorityQueue::sift_down(size_type idx)
         idx = best;
     }
 }
-
-// --- Оператор вывода ---
 
 std::ostream& operator<<(std::ostream& os, const PriorityQueue& pq)
 {

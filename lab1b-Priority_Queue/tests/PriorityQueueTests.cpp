@@ -1,8 +1,6 @@
 #include <gtest/gtest.h>
 #include "PriorityQueue.hpp"
 
-// ------ Вспомогательные функции для тестов ------
-
 static std::vector<int> drain_queue(PriorityQueue& pq) {
     std::vector<int> result;
     result.reserve(pq.size());
@@ -13,10 +11,8 @@ static std::vector<int> drain_queue(PriorityQueue& pq) {
     return result;
 }
 
-// ------ ТЕСТЫ НА ПУСТУЮ ОЧЕРЕДЬ ------
-
 TEST(PriorityQueueBasic, EmptyQueueProperties) {
-    PriorityQueue pq; // max-heap по умолчанию
+    PriorityQueue pq;
 
     EXPECT_TRUE(pq.empty());
     EXPECT_EQ(pq.size(), 0u);
@@ -25,10 +21,8 @@ TEST(PriorityQueueBasic, EmptyQueueProperties) {
     EXPECT_THROW(pq.pop(), std::out_of_range);
 }
 
-// ------ MAX-HEAP: push / pop / top ------
-
 TEST(PriorityQueueMaxHeap, PushPopOrder) {
-    PriorityQueue pq(true); // явно max-heap
+    PriorityQueue pq(true);
 
     pq.push(10);
     pq.push(3);
@@ -48,10 +42,8 @@ TEST(PriorityQueueMaxHeap, PushPopOrder) {
     EXPECT_EQ(pq.size(), 0u);
 }
 
-// ------ MIN-HEAP: push / pop / top ------
-
 TEST(PriorityQueueMinHeap, PushPopOrder) {
-    PriorityQueue pq(false); // min-heap
+    PriorityQueue pq(false);
 
     pq.push(10);
     pq.push(3);
@@ -68,11 +60,9 @@ TEST(PriorityQueueMinHeap, PushPopOrder) {
     EXPECT_TRUE(pq.empty());
 }
 
-// ------ КОНСТРУКТОР ОТ ВЕКТОРА ------
-
 TEST(PriorityQueueConstructors, FromVectorMaxHeap) {
     std::vector<int> data = {5, 1, 9, 3, 7};
-    PriorityQueue pq(data, true); // max-heap
+    PriorityQueue pq(data, true);
 
     EXPECT_EQ(pq.size(), data.size());
     EXPECT_EQ(pq.top(), 9);
@@ -84,7 +74,7 @@ TEST(PriorityQueueConstructors, FromVectorMaxHeap) {
 
 TEST(PriorityQueueConstructors, FromVectorMinHeap) {
     std::vector<int> data = {5, 1, 9, 3, 7};
-    PriorityQueue pq(data, false); // min-heap
+    PriorityQueue pq(data, false);
 
     EXPECT_EQ(pq.size(), data.size());
     EXPECT_EQ(pq.top(), 1);
@@ -94,25 +84,22 @@ TEST(PriorityQueueConstructors, FromVectorMinHeap) {
     EXPECT_EQ(drained, expected);
 }
 
-// ------ КОПИРОВАНИЕ / ПЕРЕМЕЩЕНИЕ ------
-
 TEST(PriorityQueueCopyMove, CopyConstructorAndAssignment) {
     PriorityQueue original(true);
     original.push(1);
     original.push(5);
     original.push(3);
 
-    PriorityQueue copy(original); // конструктор копирования
+    PriorityQueue copy(original); 
     EXPECT_EQ(copy.size(), original.size());
     EXPECT_EQ(copy.top(), original.top());
     EXPECT_EQ(copy, original);
 
-    // Меняем copy, original не должен измениться
     copy.push(10);
     EXPECT_NE(copy, original);
 
     PriorityQueue assigned(false);
-    assigned = original; // оператор присваивания копированием
+    assigned = original;
 
     EXPECT_EQ(assigned.size(), original.size());
     EXPECT_EQ(assigned.top(), original.top());
@@ -126,16 +113,13 @@ TEST(PriorityQueueCopyMove, MoveConstructorAndAssignment) {
     src.push(8);
     src.push(4);
 
-    // Move-конструктор
     PriorityQueue moved(std::move(src));
     EXPECT_EQ(moved.size(), 3u);
     EXPECT_EQ(moved.top(), 8);
 
-    // исходный объект должен оставаться в валидном состоянии
     EXPECT_NO_THROW(src.size());
     EXPECT_NO_THROW(src.empty());
 
-    // Move-оператор присваивания
     PriorityQueue another(false);
     another.push(100);
     another.push(200);
@@ -145,8 +129,6 @@ TEST(PriorityQueueCopyMove, MoveConstructorAndAssignment) {
     EXPECT_EQ(another.size(), 3u);
     EXPECT_EQ(another.top(), 8);
 }
-
-// ------ clear / reserve / empty / size ------
 
 TEST(PriorityQueueModifiers, ClearAndEmptyAndSize) {
     PriorityQueue pq;
@@ -181,8 +163,6 @@ TEST(PriorityQueueModifiers, ReserveDoesNotBreakHeap) {
     EXPECT_EQ(drained, expected);
 }
 
-// ------ is_max_heap() ------
-
 TEST(PriorityQueueProperties, IsMaxHeapFlag) {
     PriorityQueue max_default;
     PriorityQueue max_explicit(true);
@@ -192,8 +172,6 @@ TEST(PriorityQueueProperties, IsMaxHeapFlag) {
     EXPECT_TRUE(max_explicit.is_max_heap());
     EXPECT_FALSE(min_explicit.is_max_heap());
 }
-
-// ------ operator== / operator!= ------
 
 TEST(PriorityQueueComparison, EqualityAndInequality) {
     PriorityQueue a(true);
@@ -210,11 +188,9 @@ TEST(PriorityQueueComparison, EqualityAndInequality) {
     EXPECT_EQ(a, b);
     EXPECT_FALSE(a != b);
 
-    // Разный набор элементов
     b.push(100);
     EXPECT_NE(a, b);
 
-    // Разный режим кучи
     PriorityQueue c(false);
     c.push(3);
     c.push(1);
@@ -222,8 +198,6 @@ TEST(PriorityQueueComparison, EqualityAndInequality) {
 
     EXPECT_NE(a, c);
 }
-
-// ------ Исключения отдельно для top/pop на пустой ------
 
 TEST(PriorityQueueExceptions, TopAndPopThrowOnEmpty) {
     PriorityQueue pq;
@@ -237,7 +211,6 @@ TEST(PriorityQueueExceptions, TopAndPopThrowOnEmpty) {
     EXPECT_THROW(pq.top(), std::out_of_range);
 }
 
-// Точка входа для Google Test (можно и не писать, если линковать с gtest_main)
 int main(int argc, char** argv) {
     ::testing::InitGoogleTest(&argc, argv);
     return RUN_ALL_TESTS();
